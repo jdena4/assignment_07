@@ -150,3 +150,4 @@ def scrape_canal(page, shop: str = CANAL_SHOP) -> list[dict]:
                 "size": size,
                 "price": clean_price(price)
             })
+    return rows
