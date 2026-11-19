@@ -1,8 +1,19 @@
 Write your reflection here.
 
-See reflection.md for what makes a good reflection — be specific, use the
-terminology from this assignment (HTML element, CSS selector, class and id
-selectors, sibling selector, inner_text, attribute, headless browser, waiting for
-JavaScript, crawling, pagination, read_html, melt, fuzzy matching, normalization,
-threshold, human in the loop, merge indicator, gap analysis), and make it
-actionable.
+The biggest takeaway I got from this assignment was that each cafe's site needs a
+different scraping technique. For Lakeshore I used a class selector to find each
+heading, then the sibling selector to get the cards after it. For Hilltop,
+pd.read_html read the HTML tables and melt turned the S/M/L columns into one row per
+size. Canal Street was the hardest, the menus load with JavaScript so I had to
+select a shop, click buttons and use wait_for_selector. Without waiting,
+query_selector_all returns an empty list. For matching, normalization made similar
+names identical. That is why the thresholds only auto-match scores of 90 or more and
+send the rest to a human in the loop. For the gap analysis, an outer merge with
+indicator=True showed what only we sell, what only the rivals sell, and what we both
+sell.
+
+Where I need to improve for next time is finding ruff errors while I am writing the
+code. Some of my code lines were too long, had blank lines and were missing
+newlines. I also had an extra indent that caused an IndentationError and broke every
+test until I was able to see the issue. I also believe that I need some more
+practice with pandas axis=1 and with writing regex patterns.
