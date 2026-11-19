@@ -79,8 +79,10 @@ def top_candidates(name: str, choices: list[str], limit: int = 3) -> list[tuple]
     """
     normalized_name = normalize_name(name)
     normalized_choices = [normalize_name(choice) for choice in choices]
-    results = process.extract(normalized_name, normalized_choices, scorer=fuzz.token_sort_ratio, limit=limit)
+    results = process.extract(normalized_name, normalized_choices,
+                              scorer=fuzz.token_sort_ratio, limit=limit)
     return [(choices[index], round(score)) for match, score, index in results]
+
 
 def match_band(score: float) -> str:
     """How sure a score is: "auto" at settings.AUTO_MATCH or more, "review" at
@@ -205,5 +207,5 @@ def record_decision(decisions: pd.DataFrame, cafe: str, item: str,
       (When nothing is kept, the one-row DataFrame is the answer.)
     """
     others = decisions[(decisions["cafe"] != cafe) | (decisions["item"] != item)]
-    new = pd.DataFrame([{ "cafe": cafe, "item": item, "matched_to": matched_to }])
+    new = pd.DataFrame([{"cafe": cafe, "item": item, "matched_to": matched_to}])
     return pd.concat([others, new], ignore_index=True)[DECISION_COLUMNS]

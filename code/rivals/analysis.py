@@ -120,6 +120,7 @@ def compare_prices(prices: pd.DataFrame) -> pd.DataFrame:
     table.columns.name = None
     return table.reset_index(drop=True)
 
+
 def gap_analysis(menus: pd.DataFrame) -> pd.DataFrame:
     """Which items only we sell, which only rivals sell, and which we both do.
 

@@ -133,7 +133,8 @@ def scrape_canal(page, shop: str = CANAL_SHOP) -> list[dict]:
     while more.is_visible():
         count = page.locator("a.result-card").count()
         more.click()
-        page.wait_for_function(f"document.querySelectorAll('a.result-card').length > {count}")
+        page.wait_for_function(
+            f"document.querySelectorAll('a.result-card').length > {count}")
     links = [a.get_attribute("href") for a in page.query_selector_all("a.result-card")]
     rows = []
     for href in links:
