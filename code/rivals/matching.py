@@ -151,8 +151,43 @@ def match_items(menus: pd.DataFrame, decisions: pd.DataFrame) -> pd.DataFrame:
     - `return pd.DataFrame(rows, columns=[...the seven columns...])` — naming the
       columns keeps them in order.
     """
-    # TODO: your code here
-    pass
+    ours = menus[menus["cafe"] == OUR_CAFE]
+    pool = dict(zip(ours["item"], ours["kind"]))
+
+    answers = {}
+    for row in decisions.to_dict("records"):
+        answers[(row["cafe"], row["item"])] = row["matched_to"]
+
+    theirs = menus[menus["cafe"] != OUR_CAFE]
+    rivals = theirs[["cafe", "item", "kind"]].drop_duplicates()
+
+    rows = []
+    for cafe, item, kind in rivals.itertuples(index=False):
+        choices = [name for name, k in pool.items() if k == kind]
+        suggestions = top_candidates(item, choices)
+        score = suggestions[0][1] if suggestions else 0
+
+        if (cafe, item) in answers:
+            status = "owner"
+            matched_to = answers[(cafe, item)]
+            if matched_to == NEW_ITEM:
+                matched_to = item
+        elif score >= AUTO_MATCH:
+            status = "auto"
+            matched_to = suggestions[0][0]
+        else:
+            status = "unreviewed"
+            matched_to = None
+
+        if matched_to is not None and matched_to not in pool:
+            pool[matched_to] = kind
+
+        rows.append({"cafe": cafe, "item": item, "kind": kind, "status": status,
+                     "matched_to": matched_to, "score": score,
+                     "suggestions": suggestions})
+
+    return pd.DataFrame(rows, columns=["cafe", "item", "kind", "status",
+                                       "matched_to", "score", "suggestions"])
 
 
 def record_decision(decisions: pd.DataFrame, cafe: str, item: str,
